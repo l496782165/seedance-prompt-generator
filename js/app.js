@@ -1307,6 +1307,11 @@ const App = {
     async callDoubaoAPI(scriptContent) {
         const settings = StorageService.getSettings();
         
+        console.log('=== 豆包API调用开始 ===');
+        console.log('API端点:', settings.doubaoApiEndpoint);
+        console.log('模型ID:', settings.doubaoModelId);
+        console.log('API Key长度:', settings.doubaoApiKey?.length);
+        
         // 设计专业的剧本分析Prompt
         const analysisPrompt = `你是一个专业的影视剧本分析师。请分析以下剧本内容，提取角色、场景和道具信息。
 
@@ -1344,33 +1349,59 @@ ${scriptContent}
 4. 识别重要的道具物品
 5. 只返回JSON，不要有其他文字`;
 
-        const response = await fetch(settings.doubaoApiEndpoint, {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + settings.doubaoApiKey,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                model: settings.doubaoModelId || 'doubao-seed-2-0-lite-260215',
-                input: [
-                    { role: 'user', content: analysisPrompt }
-                ]
-            })
-        });
+        try {
+            const response = await fetch(settings.doubaoApiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + settings.doubaoApiKey,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model: settings.doubaoModelId || 'doubao-seed-2-0-lite-260215',
+                    input: [
+                        { role: 'user', content: analysisPrompt }
+                    ]
+                })
+            });
 
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.error?.message || `API请求失败: ${response.status}`);
-        }
+            console.log('API响应状态:', response.status);
 
-        const data = await response.json();
-        
-        // 提取返回内容
-        if (data.output?.choices?.[0]?.message?.content) {
-            return data.output.choices[0].message.content;
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                console.error('API错误:', errorData);
+                throw new Error(errorData.error?.message || `API请求失败: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('API返回数据:', data);
+            
+            // 提取返回内容 - 尝试多种格式
+            let content = null;
+            
+            // 格式1: data.output.choices
+            if (data.output?.choices?.[0]?.message?.content) {
+                content = data.output.choices[0].message.content;
+            }
+            // 格式2: data.choices (标准OpenAI格式)
+            else if (data.choices?.[0]?.message?.content) {
+                content = data.choices[0].message.content;
+            }
+            // 格式3: data.content
+            else if (data.content) {
+                content = data.content;
+            }
+            
+            if (content) {
+                console.log('提取到的内容:', content.substring(0, 200));
+                return content;
+            }
+            
+            console.error('无法解析API返回结果，数据结构:', Object.keys(data));
+            throw new Error('无法解析API返回结果');
+        } catch (error) {
+            console.error('API调用错误:', error);
+            throw error;
         }
-        
-        throw new Error('无法解析API返回结果');
     },
 
     /**
