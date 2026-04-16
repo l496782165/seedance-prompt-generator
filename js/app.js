@@ -1621,7 +1621,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 关闭模态框
     document.querySelectorAll('.modal-close, .modal-cancel').forEach(btn => {
         btn.addEventListener('click', () => {
-            btn.closest('.modal')?.classList.remove('show');
+            btn.closest('.modal-overlay')?.classList.remove('show');
         });
     });
 
