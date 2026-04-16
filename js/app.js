@@ -756,8 +756,8 @@ const App = {
      */
     showCreateScriptModal() {
         const modal = document.getElementById('modal-create-script');
-        modal.querySelector('.modal-input[name="name"]').value = '';
-        modal.querySelector('.modal-input[name="description"]').value = '';
+        modal.querySelector('.form-input[name="name"]').value = '';
+        modal.querySelector('[name="description"]').value = '';
         modal.classList.add('show');
     },
 
@@ -766,8 +766,8 @@ const App = {
      */
     createScript() {
         const modal = document.getElementById('modal-create-script');
-        const name = modal.querySelector('.modal-input[name="name"]').value.trim();
-        const description = modal.querySelector('.modal-input[name="description"]').value.trim();
+        const name = modal.querySelector('.form-input[name="name"]').value.trim();
+        const description = modal.querySelector('[name="description"]').value.trim();
 
         if (!name) {
             Utils.showNotification('请输入剧本名称', 'error');
@@ -799,8 +799,8 @@ const App = {
         if (!script) return;
 
         const modal = document.getElementById('modal-script-settings');
-        modal.querySelector('.modal-input[name="name"]').value = script.name;
-        modal.querySelector('.modal-input[name="description"]').value = script.description || '';
+        modal.querySelector('.form-input[name="name"]').value = script.name;
+        modal.querySelector('[name="description"]').value = script.description || '';
         modal.classList.add('show');
     },
 
@@ -809,8 +809,8 @@ const App = {
      */
     updateScriptSettings() {
         const modal = document.getElementById('modal-script-settings');
-        const name = modal.querySelector('.modal-input[name="name"]').value.trim();
-        const description = modal.querySelector('.modal-input[name="description"]').value.trim();
+        const name = modal.querySelector('.form-input[name="name"]').value.trim();
+        const description = modal.querySelector('[name="description"]').value.trim();
 
         if (!name) {
             Utils.showNotification('请输入剧本名称', 'error');
@@ -837,18 +837,18 @@ const App = {
             const character = AppState.currentScript.characters.find(c => c.id === characterId);
             if (character) {
                 title.textContent = '编辑角色';
-                modal.querySelector('.modal-input[name="name"]').value = character.name;
-                modal.querySelector('.modal-input[name="appearance"]').value = character.appearance || '';
-                modal.querySelector('.modal-input[name="clothing"]').value = character.clothing || '';
-                modal.querySelector('.modal-input[name="weapon"]').value = character.weapon || '';
+                modal.querySelector('.form-input[name="name"]').value = character.name;
+                modal.querySelector('[name="appearance"]').value = character.appearance || '';
+                modal.querySelector('.form-input[name="clothing"]').value = character.clothing || '';
+                modal.querySelector('.form-input[name="weapon"]').value = character.weapon || '';
                 modal.dataset.editId = characterId;
             }
         } else {
             title.textContent = '添加角色';
-            modal.querySelector('.modal-input[name="name"]').value = '';
-            modal.querySelector('.modal-input[name="appearance"]').value = '';
-            modal.querySelector('.modal-input[name="clothing"]').value = '';
-            modal.querySelector('.modal-input[name="weapon"]').value = '';
+            modal.querySelector('.form-input[name="name"]').value = '';
+            modal.querySelector('[name="appearance"]').value = '';
+            modal.querySelector('.form-input[name="clothing"]').value = '';
+            modal.querySelector('.form-input[name="weapon"]').value = '';
             delete modal.dataset.editId;
         }
         
@@ -860,10 +860,10 @@ const App = {
      */
     saveCharacter() {
         const modal = document.getElementById('modal-character');
-        const name = modal.querySelector('.modal-input[name="name"]').value.trim();
-        const appearance = modal.querySelector('.modal-input[name="appearance"]').value.trim();
-        const clothing = modal.querySelector('.modal-input[name="clothing"]').value.trim();
-        const weapon = modal.querySelector('.modal-input[name="weapon"]').value.trim();
+        const name = modal.querySelector('.form-input[name="name"]').value.trim();
+        const appearance = modal.querySelector('[name="appearance"]').value.trim();
+        const clothing = modal.querySelector('.form-input[name="clothing"]').value.trim();
+        const weapon = modal.querySelector('.form-input[name="weapon"]').value.trim();
 
         if (!name) {
             Utils.showNotification('请输入角色名称', 'error');
@@ -920,19 +920,19 @@ const App = {
             const shot = AppState.currentScript.shots.find(s => s.id === shotId);
             if (shot) {
                 title.textContent = '编辑分镜';
-                modal.querySelector('.modal-input[name="duration"]').value = shot.duration || 5;
-                modal.querySelector('.modal-input[name="sceneDescription"]').value = shot.sceneDescription || '';
-                modal.querySelector('.modal-input[name="actionDescription"]').value = shot.actionDescription || '';
-                modal.querySelector('.modal-input[name="cameraInstruction"]').value = shot.cameraInstruction || '';
+                modal.querySelector('.form-input[name="duration"]').value = shot.duration || 5;
+                modal.querySelector('[name="sceneDescription"]').value = shot.sceneDescription || '';
+                modal.querySelector('[name="actionDescription"]').value = shot.actionDescription || '';
+                modal.querySelector('.form-input[name="cameraInstruction"]').value = shot.cameraInstruction || '';
                 modal.querySelector('.modal-select[name="recipeId"]').value = shot.recipeId || '';
                 modal.dataset.editId = shotId;
             }
         } else {
             title.textContent = '创建分镜';
-            modal.querySelector('.modal-input[name="duration"]').value = 5;
-            modal.querySelector('.modal-input[name="sceneDescription"]').value = '';
-            modal.querySelector('.modal-input[name="actionDescription"]').value = '';
-            modal.querySelector('.modal-input[name="cameraInstruction"]').value = '';
+            modal.querySelector('.form-input[name="duration"]').value = 5;
+            modal.querySelector('[name="sceneDescription"]').value = '';
+            modal.querySelector('[name="actionDescription"]').value = '';
+            modal.querySelector('.form-input[name="cameraInstruction"]').value = '';
             modal.querySelector('.modal-select[name="recipeId"]').value = '';
             delete modal.dataset.editId;
         }
@@ -951,10 +951,10 @@ const App = {
      */
     saveShot() {
         const modal = document.getElementById('modal-shot');
-        const duration = parseInt(modal.querySelector('.modal-input[name="duration"]').value) || 5;
-        const sceneDescription = modal.querySelector('.modal-input[name="sceneDescription"]').value.trim();
-        const actionDescription = modal.querySelector('.modal-input[name="actionDescription"]').value.trim();
-        const cameraInstruction = modal.querySelector('.modal-input[name="cameraInstruction"]').value.trim();
+        const duration = parseInt(modal.querySelector('.form-input[name="duration"]').value) || 5;
+        const sceneDescription = modal.querySelector('[name="sceneDescription"]').value.trim();
+        const actionDescription = modal.querySelector('[name="actionDescription"]').value.trim();
+        const cameraInstruction = modal.querySelector('.form-input[name="cameraInstruction"]').value.trim();
         const recipeId = modal.querySelector('.modal-select[name="recipeId"]').value;
 
         const shotData = { duration, sceneDescription, actionDescription, cameraInstruction, recipeId };
