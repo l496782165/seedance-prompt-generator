@@ -1350,7 +1350,14 @@ ${scriptContent}
 5. 只返回JSON，不要有其他文字`;
 
         try {
-            const response = await fetch(settings.doubaoApiEndpoint, {
+            // 使用CORS代理
+            const corsProxy = 'https://corsproxy.io/?';
+            const targetUrl = settings.doubaoApiEndpoint;
+            const apiUrl = corsProxy + encodeURIComponent(targetUrl);
+            
+            console.log('使用CORS代理请求...');
+            
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + settings.doubaoApiKey,
@@ -1367,9 +1374,15 @@ ${scriptContent}
             console.log('API响应状态:', response.status);
 
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                console.error('API错误:', errorData);
-                throw new Error(errorData.error?.message || `API请求失败: ${response.status}`);
+                const errorText = await response.text();
+                console.error('API错误响应:', errorText);
+                let errorData;
+                try {
+                    errorData = JSON.parse(errorText);
+                } catch {
+                    errorData = { message: errorText };
+                }
+                throw new Error(errorData.error?.message || errorData.message || `API请求失败: ${response.status}`);
             }
 
             const data = await response.json();
